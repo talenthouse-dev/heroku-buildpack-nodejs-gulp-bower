@@ -110,10 +110,23 @@ status "Building runtime environment"
 mkdir -p $build_dir/.profile.d
 echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\";" > $build_dir/.profile.d/nodejs.sh
 
-npm install bower
-npm install grunt-cli
-npm install grunt
-npm install gulp
+(
+  if [ -f $build_dir/gulpfile.js ]; then
+    # get the env vars
+    if [ -d "$env_dir" ]; then
+      status "Exporting config vars to environment"
+      export_env_dir $env_dir
+    fi
+
+    npm install
+    bower install
+    
+    echo "-----> Found Gulpfile, running gulp heroku:production task"
+    $build_dir/node_modules/.bin/gulp heroku:$NODE_ENV
+  else
+    echo "-----> No Gulpfile found"
+  fi
+)
 
 # Post package.json to nomnom service
 # Use a subshell so failures won't break the build.
