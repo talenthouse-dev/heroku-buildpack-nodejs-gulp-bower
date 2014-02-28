@@ -122,7 +122,7 @@ echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\
     $build_dir/node_modules/.bin/bower --allow-root install 
     
     echo "-----> Found Gulpfile, running gulp heroku:production task"
-    $build_dir/node_modules/.bin/gulp heroku:$NODE_ENV
+    $build_dir/node_modules/.bin/gulp heroku:production
   else
     echo "-----> No Gulpfile found"
   fi
