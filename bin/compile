@@ -119,12 +119,10 @@ echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\
     fi
 
     npm install
-    npm install -g gulp
-    npm install -g bower
-    bower install
+    $build_dir/node_modules/.bin/bower install
     
     echo "-----> Found Gulpfile, running gulp heroku:production task"
-    gulp heroku:$NODE_ENV
+    $build_dir/node_modules/.bin/gulp heroku:$NODE_ENV
   else
     echo "-----> No Gulpfile found"
   fi
