@@ -118,7 +118,6 @@ echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\
       export_env_dir $env_dir
     fi
 
-    npm install
     $build_dir/node_modules/.bin/bower --allow-root install 
     
     echo "-----> Found Gulpfile, running gulp heroku:production task"
