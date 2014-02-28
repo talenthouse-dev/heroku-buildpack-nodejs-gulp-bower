@@ -69,14 +69,6 @@ elif test -d $cache_dir/node_modules; then
   npm prune 2>&1 | indent
 fi
 
-if test -d $build_dir/.cache; then
-  status "Existing bower cache; skipping cache"
-elif test -d $cache_dir/bower_cache; then
-  status "Restoring bower .cache directory from cache"
-  cp -r $cache_dir/bower_cache $build_dir/
-  mv $build_dir/bower_cache $build_dir/.cache
-fi
-
 # Scope config var availability only to `npm install`
 (
   if [ -d "$env_dir" ]; then
@@ -106,11 +98,6 @@ echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\
 
 status "Installing bower artifacts"
 $build_dir/node_modules/.bin/bower --allow-root install
-
-status "Caching bower artifacts for future builds"
-rm -rf $cache_dir/bower_cache
-test -d $build_dir/.cache && cp -r $build_dir/.cache $cache_dir/
-mv $cache_dir/.cache $cache_dir/bower_cache
 
 if [ -f $build_dir/gulpfile.js ]; then
   echo "-----> Found Gulpfile, running gulp heroku:production task"
