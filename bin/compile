@@ -95,8 +95,6 @@ status "Building runtime environment"
 mkdir -p $build_dir/.profile.d
 echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\";" > $build_dir/.profile.d/nodejs.sh
 
-git config --global url."https://".insteadOf git://
-
 status "Installing bower artifacts"
 $build_dir/node_modules/.bin/bower --allow-root install
 
