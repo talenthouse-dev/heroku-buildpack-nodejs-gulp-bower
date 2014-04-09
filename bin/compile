@@ -55,36 +55,13 @@ PATH=$PATH:$build_dir/vendor/node/bin
 # Run subsequent node/npm commands from the build path
 cd $build_dir
 
-# If node_modules directory is checked into source control then
-# rebuild any native deps. Otherwise, restore from the build cache.
-if test -d $build_dir/node_modules; then
-  status "Found existing node_modules directory; skipping cache"
-  status "Rebuilding any native dependencies"
-  npm rebuild 2>&1 | indent
-elif test -d $cache_dir/node_modules; then
-  status "Restoring node_modules directory from cache"
-  cp -r $cache_dir/node_modules $build_dir/
-
-  status "Pruning cached dependencies not specified in package.json"
-  npm prune 2>&1 | indent
-fi
-
 # Scope config var availability only to `npm install`
 (
   if [ -d "$env_dir" ]; then
     status "Exporting config vars to environment"
     export_env_dir $env_dir
   fi
-
-  status "Installing dependencies"
-  # Make npm output to STDOUT instead of its default STDERR
-  npm install --userconfig $build_dir/.npmrc --production 2>&1 | indent
 )
-
-status "Caching node_modules directory for future builds"
-rm -rf $cache_dir/node_modules
-mkdir -p $cache_dir
-test -d $build_dir/node_modules && cp -r $build_dir/node_modules $cache_dir/
 
 status "Cleaning up node-gyp and npm artifacts"
 rm -rf "$build_dir/.node-gyp"
@@ -94,9 +71,6 @@ rm -rf "$build_dir/.npm"
 status "Building runtime environment"
 mkdir -p $build_dir/.profile.d
 echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\";" > $build_dir/.profile.d/nodejs.sh
-
-status "Installing bower artifacts"
-$build_dir/node_modules/.bin/bower --allow-root install
 
 if [ -f $build_dir/gulpfile.js ]; then
   echo "-----> Found Gulpfile, running gulp heroku:production task"
